@@ -1,6 +1,219 @@
+enum ActionKind {
+    Walking,
+    Idle,
+    Jumping
+}
+function initBogey (bogey: Sprite) {
+    anim2 = animation.createAnimation(ActionKind.Idle, 100)
+    animation.attachAnimation(bogey, anim2)
+    anim2.addAnimationFrame(img`
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . c c c c . . . . 
+        . . . . . . c c d d d d c . . . 
+        . . . . . c c c c c c d c . . . 
+        . . . . c c 4 4 4 4 d c c . . . 
+        . . . c 4 d 4 4 4 4 4 1 c . c c 
+        . . c 4 4 4 1 4 4 4 4 d 1 c 4 c 
+        . c 4 4 4 4 1 4 4 4 4 4 1 c 4 c 
+        f 4 4 4 4 4 1 4 4 4 4 4 1 4 4 f 
+        f 4 4 4 f 4 1 c c 4 4 4 1 f 4 f 
+        f 4 4 4 4 4 1 4 4 f 4 4 d f 4 f 
+        . f 4 4 4 4 1 c 4 f 4 d f f f f 
+        . . f f 4 d 4 4 f f 4 c f c . . 
+        . . . . f f 4 4 4 4 c d b c . . 
+        . . . . . . f f f f d d d c . . 
+        . . . . . . . . . . c c c . . . 
+        `)
+    anim2.addAnimationFrame(img`
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . c c c c c . . . . 
+        . . . . . . c d d d d d c . . . 
+        . . . . . . c c c c c d c . . . 
+        . . . . . c 4 4 4 4 d c c . . . 
+        . . . . c d 4 4 4 4 4 1 c . . . 
+        . . . c 4 4 1 4 4 4 4 4 1 c . . 
+        . . c 4 4 4 4 1 4 4 4 4 1 c c c 
+        . c 4 4 4 4 4 1 c c 4 4 1 4 4 c 
+        . c 4 4 4 4 4 1 4 4 f 4 1 f 4 f 
+        f 4 4 4 4 f 4 1 c 4 f 4 d f 4 f 
+        f 4 4 4 4 4 4 1 4 f f 4 f f 4 f 
+        . f 4 4 4 4 1 4 4 4 4 c b c f f 
+        . . f f f d 4 4 4 4 c d d c . . 
+        . . . . . f f f f f c c c . . . 
+        . . . . . . . . . . . . . . . . 
+        `)
+    anim2.addAnimationFrame(img`
+        . . . . . . . . c c c c . . . . 
+        . . . . . . c c d d d d c . . . 
+        . . . . . c c c c c c d c . . . 
+        . . . . c c 4 4 4 4 d c c . c c 
+        . . . c 4 d 4 4 4 4 4 1 c c 4 c 
+        . . c 4 4 4 1 4 4 4 4 d 1 c 4 f 
+        . c 4 4 4 4 1 4 4 4 4 4 1 4 4 f 
+        f 4 4 4 4 4 1 1 c f 4 4 1 f 4 f 
+        f 4 4 4 f 4 1 c 4 f 4 4 1 f 4 f 
+        f 4 4 4 4 4 1 4 4 f 4 4 d f f f 
+        . f 4 4 4 4 1 c c 4 4 d f f . . 
+        . . f f 4 d 4 4 4 4 4 c f . . . 
+        . . . . f f 4 4 4 4 c d b c . . 
+        . . . . . . f f f f d d d c . . 
+        . . . . . . . . . . c c c . . . 
+        . . . . . . . . . . . . . . . . 
+        `)
+    anim2.addAnimationFrame(img`
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . c c c c . . . 
+        . . . . . . . c c d d d d c . . 
+        . . . . . c c c c c c d d c . . 
+        . . . c c c 4 4 4 4 d c c c c c 
+        . . c 4 4 1 4 4 4 4 4 1 c c 4 f 
+        . c 4 4 4 4 1 4 4 4 4 d 1 f 4 f 
+        f 4 4 4 4 4 1 4 4 4 4 4 1 f 4 f 
+        f 4 4 f 4 4 1 4 c f 4 4 1 4 4 f 
+        f 4 4 4 4 4 1 c 4 f 4 4 1 f f f 
+        . f 4 4 4 4 1 4 4 f 4 4 d f . . 
+        . . f 4 4 1 4 c c 4 4 d f . . . 
+        . . . f d 4 4 4 4 4 4 c f . . . 
+        . . . . f f 4 4 4 4 c d b c . . 
+        . . . . . . f f f f d d d c . . 
+        . . . . . . . . . . c c c . . . 
+        `)
+    animation.setAction(bogey, ActionKind.Idle)
+}
+function initSpacePlane (spacePlane: Sprite) {
+    anim = animation.createAnimation(ActionKind.Idle, 100)
+    animation.attachAnimation(spacePlane, anim)
+    anim.addAnimationFrame(img`
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . b 5 5 b . . . 
+        . . . . . . b b b b b b . . . . 
+        . . . . . b b 5 5 5 5 5 b . . . 
+        . b b b b b 5 5 5 5 5 5 5 b . . 
+        . b d 5 b 5 5 5 5 5 5 5 5 b . . 
+        . . b 5 5 b 5 d 1 f 5 d 4 f . . 
+        . . b d 5 5 b 1 f f 5 4 4 c . . 
+        b b d b 5 5 5 d f b 4 4 4 4 b . 
+        b d d c d 5 5 b 5 4 4 4 4 4 4 b 
+        c d d d c c b 5 5 5 5 5 5 5 b . 
+        c b d d d d d 5 5 5 5 5 5 5 b . 
+        . c d d d d d d 5 5 5 5 5 d b . 
+        . . c b d d d d d 5 5 5 b b . . 
+        . . . c c c c c c c c b b . . . 
+        `)
+    anim.addAnimationFrame(img`
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . b 5 b . . . 
+        . . . . . . . . . b 5 b . . . . 
+        . . . . . . b b b b b b . . . . 
+        . . . . . b b 5 5 5 5 5 b . . . 
+        . b b b b b 5 5 5 5 5 5 5 b . . 
+        . b d 5 b 5 5 5 5 5 5 5 5 b . . 
+        . . b 5 5 b 5 d 1 f 5 d 4 f . . 
+        . . b d 5 5 b 1 f f 5 4 4 c . . 
+        b b d b 5 5 5 d f b 4 4 4 4 4 b 
+        b d d c d 5 5 b 5 4 4 4 4 4 b . 
+        c d d d c c b 5 5 5 5 5 5 5 b . 
+        c b d d d d d 5 5 5 5 5 5 5 b . 
+        . c d d d d d d 5 5 5 5 5 d b . 
+        . . c b d d d d d 5 5 5 b b . . 
+        . . . c c c c c c c c b b . . . 
+        `)
+    anim.addAnimationFrame(img`
+        . . . . . . . . . . b 5 b . . . 
+        . . . . . . . . . b 5 b . . . . 
+        . . . . . . . . . b c . . . . . 
+        . . . . . . b b b b b b . . . . 
+        . . . . . b b 5 5 5 5 5 b . . . 
+        . . . . b b 5 d 1 f 5 5 d f . . 
+        . . . . b 5 5 1 f f 5 d 4 c . . 
+        . . . . b 5 5 d f b d d 4 4 . . 
+        b d d d b b d 5 5 5 4 4 4 4 4 b 
+        b b d 5 5 5 b 5 5 4 4 4 4 4 b . 
+        b d c 5 5 5 5 d 5 5 5 5 5 b . . 
+        c d d c d 5 5 b 5 5 5 5 5 5 b . 
+        c b d d c c b 5 5 5 5 5 5 5 b . 
+        . c d d d d d d 5 5 5 5 5 d b . 
+        . . c b d d d d d 5 5 5 b b . . 
+        . . . c c c c c c c c b b . . . 
+        `)
+    anim.addAnimationFrame(img`
+        . . . . . . . . . . b 5 b . . . 
+        . . . . . . . . . b 5 b . . . . 
+        . . . . . . b b b b b b . . . . 
+        . . . . . b b 5 5 5 5 5 b . . . 
+        . . . . b b 5 d 1 f 5 d 4 c . . 
+        . . . . b 5 5 1 f f d d 4 4 4 b 
+        . . . . b 5 5 d f b 4 4 4 4 b . 
+        . . . b d 5 5 5 5 4 4 4 4 b . . 
+        . . b d d 5 5 5 5 5 5 5 5 b . . 
+        . b d d d d 5 5 5 5 5 5 5 5 b . 
+        b d d d b b b 5 5 5 5 5 5 5 b . 
+        c d d b 5 5 d c 5 5 5 5 5 5 b . 
+        c b b d 5 d c d 5 5 5 5 5 5 b . 
+        . b 5 5 b c d d 5 5 5 5 5 d b . 
+        b b c c c d d d d 5 5 5 b b . . 
+        . . . c c c c c c c c b b . . . 
+        `)
+    anim.addAnimationFrame(img`
+        . . . . . . . . . . b 5 b . . . 
+        . . . . . . . . . b 5 b . . . . 
+        . . . . . . b b b b b b . . . . 
+        . . . . . b b 5 5 5 5 5 b . . . 
+        . . . . b b 5 d 1 f 5 d 4 c . . 
+        . . . . b 5 5 1 f f d d 4 4 4 b 
+        . . . . b 5 5 d f b 4 4 4 4 b . 
+        . . . b d 5 5 5 5 4 4 4 4 b . . 
+        . b b d d d 5 5 5 5 5 5 5 b . . 
+        b d d d b b b 5 5 5 5 5 5 5 b . 
+        c d d b 5 5 d c 5 5 5 5 5 5 b . 
+        c b b d 5 d c d 5 5 5 5 5 5 b . 
+        c b 5 5 b c d d 5 5 5 5 5 5 b . 
+        b b c c c d d d 5 5 5 5 5 d b . 
+        . . . . c c d d d 5 5 5 b b . . 
+        . . . . . . c c c c c b b . . . 
+        `)
+    anim.addAnimationFrame(img`
+        . . . . . . . . . . b 5 b . . . 
+        . . . . . . . . . b 5 b . . . . 
+        . . . . . . b b b b b b . . . . 
+        . . . . . b b 5 5 5 5 5 b . . . 
+        . . . . b b 5 d 1 f 5 5 d f . . 
+        . . . . b 5 5 1 f f 5 d 4 c . . 
+        . . . . b 5 5 d f b d d 4 4 . . 
+        . b b b d 5 5 5 5 5 4 4 4 4 4 b 
+        b d d d b b d 5 5 4 4 4 4 4 b . 
+        b b d 5 5 5 b 5 5 5 5 5 5 b . . 
+        c d c 5 5 5 5 d 5 5 5 5 5 5 b . 
+        c b d c d 5 5 b 5 5 5 5 5 5 b . 
+        . c d d c c b d 5 5 5 5 5 d b . 
+        . . c b d d d d d 5 5 5 b b . . 
+        . . . c c c c c c c c b b . . . 
+        . . . . . . . . . . . . . . . . 
+        `)
+    anim.addAnimationFrame(img`
+        . . . . . . . . . b 5 b . . . . 
+        . . . . . . . . . b 5 b . . . . 
+        . . . . . . b b b b b b . . . . 
+        . . . . . b b 5 5 5 5 5 b . . . 
+        . . . . b b 5 b c 5 5 d 4 c . . 
+        . b b b b 5 5 5 b f d d 4 4 4 b 
+        . b d 5 b 5 5 b c b 4 4 4 4 b . 
+        . . b 5 5 b 5 5 5 4 4 4 4 b . . 
+        . . b d 5 5 b 5 5 5 5 5 5 b . . 
+        . b d b 5 5 5 d 5 5 5 5 5 5 b . 
+        b d d c d 5 5 b 5 5 5 5 5 5 b . 
+        c d d d c c b 5 5 5 5 5 5 5 b . 
+        c b d d d d d 5 5 5 5 5 5 5 b . 
+        . c d d d d d d 5 5 5 5 5 d b . 
+        . . c b d d d d d 5 5 5 b b . . 
+        . . . c c c c c c c c b b . . . 
+        `)
+    animation.setAction(spacePlane, ActionKind.Idle)
+}
 sprites.onOverlap(SpriteKind.Projectile, SpriteKind.Enemy, function (sprite, otherSprite) {
     otherSprite.destroy()
-    sprite.destroy(effects.fire, 100)
+    sprite.destroy(effects.fountain, 50)
     info.changeScoreBy(1)
 })
 sprites.onOverlap(SpriteKind.Player, SpriteKind.Enemy, function (sprite, otherSprite) {
@@ -9,26 +222,20 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.Enemy, function (sprite, otherSp
 })
 controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
     dart = sprites.createProjectileFromSprite(img`
-        . . 2 2 b b b b b . . . . . . . 
-        . 2 b 4 4 4 4 4 4 b . . . . . . 
-        2 2 4 4 4 4 d d 4 4 b . . . . . 
-        2 b 4 4 4 4 4 4 d 4 b . . . . . 
-        2 b 4 4 4 4 4 4 4 d 4 b . . . . 
-        2 b 4 4 4 4 4 4 4 4 4 b . . . . 
-        2 b 4 4 4 4 4 4 4 4 4 e . . . . 
-        2 2 b 4 4 4 4 4 4 4 b e . . . . 
-        . 2 b b b 4 4 4 b b b e . . . . 
-        . . e b b b b b b b e e . . . . 
-        . . . e e b 4 4 b e e e b . . . 
-        . . . . . e e e e e e b d b b . 
-        . . . . . . . . . . . b 1 1 1 b 
-        . . . . . . . . . . . c 1 d d b 
-        . . . . . . . . . . . c 1 b c . 
-        . . . . . . . . . . . . c c . . 
+        . . . . . . . . 
+        . . . . . . . . 
+        . . . 6 6 6 . . 
+        . . 6 8 8 8 6 . 
+        6 6 9 9 9 9 9 6 
+        . . 6 8 8 8 6 . 
+        . . . 6 6 6 . . 
+        . . . . . . . . 
         `, spacePlane, 200, 50)
 })
 let bogey: Sprite = null
 let dart: Sprite = null
+let anim: animation.Animation = null
+let anim2: animation.Animation = null
 let spacePlane: Sprite = null
 spacePlane = sprites.create(img`
     . . . . . . . . . . b 5 b . . . 
@@ -48,6 +255,7 @@ spacePlane = sprites.create(img`
     . . c b d d d d d 5 5 5 b b . . 
     . . . c c c c c c c c b b . . . 
     `, SpriteKind.Player)
+initSpacePlane(spacePlane)
 spacePlane.setFlag(SpriteFlag.StayInScreen, true)
 info.setLife(3)
 controller.moveSprite(spacePlane, 200, 200)
@@ -70,6 +278,7 @@ game.onUpdateInterval(500, function () {
         . . . . . . f f f f d d d c . . 
         . . . . . . . . . . c c c . . . 
         `, SpriteKind.Enemy)
+    initBogey(bogey)
     bogey.setVelocity(-100, 0)
     bogey.left = scene.screenWidth()
     bogey.y = randint(0, scene.screenHeight())
