@@ -3,6 +3,11 @@ enum ActionKind {
     Idle,
     Jumping
 }
+function spawnSomething (roll: number) {
+    if (roll >= 24 && roll < 40) {
+        createCloud()
+    }
+}
 function initBogey (bogey: Sprite) {
     anim2 = animation.createAnimation(ActionKind.Idle, 100)
     animation.attachAnimation(bogey, anim2)
@@ -79,6 +84,49 @@ function initBogey (bogey: Sprite) {
         . . . . . . . . . . c c c . . . 
         `)
     animation.setAction(bogey, ActionKind.Idle)
+}
+function createCloud () {
+    cloudImages = [img`
+        ..................1111...............
+        ................11111111.............
+        ...............1111111111............
+        ..............11111111111....11111...
+        ..............111111111111.11111111..
+        .............11111111111111111111111.
+        ........11111111111111111111111111111
+        .......111111111111111111111111111111
+        1111111111111111111111111111111111111
+        .111111111111111111111111111111111111
+        .......111111111111111111111111111111
+        .......................1111111111111.
+        `, img`
+        . . . 1 1 1 1 . . . 1 1 . . . . . . . . 
+        . . 1 1 1 1 1 1 . 1 1 1 1 . . . . . . . 
+        . 1 1 1 1 1 1 1 1 1 1 1 1 1 . . . . . . 
+        . 1 1 1 1 1 1 1 1 1 1 1 1 1 . 1 1 . . . 
+        1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 
+        1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 
+        1 1 1 1 1 1 1 1 1 1 1 1 1 . . . . . . . 
+        `, img`
+        ............111111...........
+        ..........111111111..........
+        .........11111111111.........
+        ........1111111111111........
+        ........1111111111111........
+        ........11111111111111.......
+        ....111111111111111111111111.
+        ...11111111111111111111111111
+        ..111111111111111111111111111
+        ..111111111111111111111111111
+        11111111111111111111111111111
+        .11111111111111111111.1.1111.
+        1........11111111111.....11..
+        11111111111111...............
+        `]
+    cloud = sprites.createProjectileFromSide(cloudImages[randint(0, cloudImages.length - 1)], -5, 0)
+    cloud.z = -10
+    cloud.setFlag(SpriteFlag.Ghost, true)
+    cloud.y = randint(0, scene.screenHeight() * 1)
 }
 function initSpacePlane (spacePlane: Sprite) {
     anim = animation.createAnimation(ActionKind.Idle, 100)
@@ -212,11 +260,12 @@ function initSpacePlane (spacePlane: Sprite) {
     animation.setAction(spacePlane, ActionKind.Idle)
 }
 sprites.onOverlap(SpriteKind.Projectile, SpriteKind.Enemy, function (sprite, otherSprite) {
+    sprite.destroy(effects.fountain, 20)
     otherSprite.destroy()
-    sprite.destroy(effects.fountain, 50)
     info.changeScoreBy(1)
 })
 sprites.onOverlap(SpriteKind.Player, SpriteKind.Enemy, function (sprite, otherSprite) {
+    otherSprite.startEffect(effects.warmRadial, 100)
     otherSprite.destroy()
     info.changeLifeBy(-1)
 })
@@ -235,8 +284,11 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
 let bogey: Sprite = null
 let dart: Sprite = null
 let anim: animation.Animation = null
+let cloud: Sprite = null
+let cloudImages: Image[] = []
 let anim2: animation.Animation = null
 let spacePlane: Sprite = null
+scene.setBackgroundColor(9)
 spacePlane = sprites.create(img`
     . . . . . . . . . . b 5 b . . . 
     . . . . . . . . . b 5 b . . . . 
@@ -259,6 +311,9 @@ initSpacePlane(spacePlane)
 spacePlane.setFlag(SpriteFlag.StayInScreen, true)
 info.setLife(3)
 controller.moveSprite(spacePlane, 200, 200)
+game.onUpdateInterval(750, function () {
+    spawnSomething(randint(0, 100))
+})
 game.onUpdateInterval(500, function () {
     bogey = sprites.create(img`
         . . . . . . . . . . . . . . . . 
