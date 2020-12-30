@@ -9,9 +9,9 @@ function spawnSomething (roll: number) {
     }
 }
 function initBogey (bogey: Sprite) {
-    anim2 = animation.createAnimation(ActionKind.Idle, 100)
-    animation.attachAnimation(bogey, anim2)
-    anim2.addAnimationFrame(img`
+    animation.runImageAnimation(
+    bogey,
+    [img`
         . . . . . . . . . . . . . . . . 
         . . . . . . . . c c c c . . . . 
         . . . . . . c c d d d d c . . . 
@@ -28,8 +28,7 @@ function initBogey (bogey: Sprite) {
         . . . . f f 4 4 4 4 c d b c . . 
         . . . . . . f f f f d d d c . . 
         . . . . . . . . . . c c c . . . 
-        `)
-    anim2.addAnimationFrame(img`
+        `,img`
         . . . . . . . . . . . . . . . . 
         . . . . . . . c c c c c . . . . 
         . . . . . . c d d d d d c . . . 
@@ -46,8 +45,7 @@ function initBogey (bogey: Sprite) {
         . . f f f d 4 4 4 4 c d d c . . 
         . . . . . f f f f f c c c . . . 
         . . . . . . . . . . . . . . . . 
-        `)
-    anim2.addAnimationFrame(img`
+        `,img`
         . . . . . . . . c c c c . . . . 
         . . . . . . c c d d d d c . . . 
         . . . . . c c c c c c d c . . . 
@@ -64,8 +62,7 @@ function initBogey (bogey: Sprite) {
         . . . . . . f f f f d d d c . . 
         . . . . . . . . . . c c c . . . 
         . . . . . . . . . . . . . . . . 
-        `)
-    anim2.addAnimationFrame(img`
+        `,img`
         . . . . . . . . . . . . . . . . 
         . . . . . . . . . c c c c . . . 
         . . . . . . . c c d d d d c . . 
@@ -82,8 +79,10 @@ function initBogey (bogey: Sprite) {
         . . . . f f 4 4 4 4 c d b c . . 
         . . . . . . f f f f d d d c . . 
         . . . . . . . . . . c c c . . . 
-        `)
-    animation.setAction(bogey, ActionKind.Idle)
+        `],
+    100,
+    true
+    )
 }
 function createCloud () {
     cloudImages = [img`
@@ -129,9 +128,9 @@ function createCloud () {
     cloud.y = randint(0, scene.screenHeight() * 1)
 }
 function initSpacePlane (spacePlane: Sprite) {
-    anim = animation.createAnimation(ActionKind.Idle, 100)
-    animation.attachAnimation(spacePlane, anim)
-    anim.addAnimationFrame(img`
+    animation.runImageAnimation(
+    spacePlane,
+    [img`
         . . . . . . . . . . . . . . . . 
         . . . . . . . . . . . . . . . . 
         . . . . . . . . . b 5 5 b . . . 
@@ -148,8 +147,7 @@ function initSpacePlane (spacePlane: Sprite) {
         . c d d d d d d 5 5 5 5 5 d b . 
         . . c b d d d d d 5 5 5 b b . . 
         . . . c c c c c c c c b b . . . 
-        `)
-    anim.addAnimationFrame(img`
+        `,img`
         . . . . . . . . . . . . . . . . 
         . . . . . . . . . . b 5 b . . . 
         . . . . . . . . . b 5 b . . . . 
@@ -166,8 +164,7 @@ function initSpacePlane (spacePlane: Sprite) {
         . c d d d d d d 5 5 5 5 5 d b . 
         . . c b d d d d d 5 5 5 b b . . 
         . . . c c c c c c c c b b . . . 
-        `)
-    anim.addAnimationFrame(img`
+        `,img`
         . . . . . . . . . . b 5 b . . . 
         . . . . . . . . . b 5 b . . . . 
         . . . . . . . . . b c . . . . . 
@@ -184,8 +181,7 @@ function initSpacePlane (spacePlane: Sprite) {
         . c d d d d d d 5 5 5 5 5 d b . 
         . . c b d d d d d 5 5 5 b b . . 
         . . . c c c c c c c c b b . . . 
-        `)
-    anim.addAnimationFrame(img`
+        `,img`
         . . . . . . . . . . b 5 b . . . 
         . . . . . . . . . b 5 b . . . . 
         . . . . . . b b b b b b . . . . 
@@ -202,8 +198,7 @@ function initSpacePlane (spacePlane: Sprite) {
         . b 5 5 b c d d 5 5 5 5 5 d b . 
         b b c c c d d d d 5 5 5 b b . . 
         . . . c c c c c c c c b b . . . 
-        `)
-    anim.addAnimationFrame(img`
+        `,img`
         . . . . . . . . . . b 5 b . . . 
         . . . . . . . . . b 5 b . . . . 
         . . . . . . b b b b b b . . . . 
@@ -220,8 +215,7 @@ function initSpacePlane (spacePlane: Sprite) {
         b b c c c d d d 5 5 5 5 5 d b . 
         . . . . c c d d d 5 5 5 b b . . 
         . . . . . . c c c c c b b . . . 
-        `)
-    anim.addAnimationFrame(img`
+        `,img`
         . . . . . . . . . . b 5 b . . . 
         . . . . . . . . . b 5 b . . . . 
         . . . . . . b b b b b b . . . . 
@@ -238,8 +232,7 @@ function initSpacePlane (spacePlane: Sprite) {
         . . c b d d d d d 5 5 5 b b . . 
         . . . c c c c c c c c b b . . . 
         . . . . . . . . . . . . . . . . 
-        `)
-    anim.addAnimationFrame(img`
+        `,img`
         . . . . . . . . . b 5 b . . . . 
         . . . . . . . . . b 5 b . . . . 
         . . . . . . b b b b b b . . . . 
@@ -256,8 +249,10 @@ function initSpacePlane (spacePlane: Sprite) {
         . c d d d d d d 5 5 5 5 5 d b . 
         . . c b d d d d d 5 5 5 b b . . 
         . . . c c c c c c c c b b . . . 
-        `)
-    animation.setAction(spacePlane, ActionKind.Idle)
+        `],
+    100,
+    true
+    )
 }
 sprites.onOverlap(SpriteKind.Projectile, SpriteKind.Enemy, function (sprite, otherSprite) {
     sprite.destroy(effects.fountain, 20)
@@ -283,16 +278,14 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
 })
 let bogey: Sprite = null
 let dart: Sprite = null
-let anim: animation.Animation = null
 let cloud: Sprite = null
 let cloudImages: Image[] = []
-let anim2: animation.Animation = null
 let spacePlane: Sprite = null
 scene.setBackgroundColor(9)
 spacePlane = sprites.create(img`
     . . . . . . . . . . b 5 b . . . 
-    . . . . . . . . . b 5 b . . . . 
-    . . . . . . . . . b c . . . . . 
+    . . . . . . . 3 . b 5 b . . . . 
+    . . . . . . . 3 . b c . . . . . 
     . . . . . . b b b b b b . . . . 
     . . . . . b b 5 5 5 5 5 b . . . 
     . . . . b b 5 d 1 f 5 5 d f . . 
