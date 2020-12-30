@@ -3,6 +3,31 @@ enum ActionKind {
     Idle,
     Jumping
 }
+function generateEnemy (enemySpeed: number) {
+    bogey = sprites.create(img`
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . c c c c . . . . 
+        . . . . . . c c d d d d c . . . 
+        . . . . . c c c c c c d c . . . 
+        . . . . c c 4 4 4 4 d c c . . . 
+        . . . c 4 d 4 4 4 4 4 1 c . c c 
+        . . c 4 4 4 1 4 4 4 4 d 1 c 4 c 
+        . c 4 4 4 4 1 4 4 4 4 4 1 c 4 c 
+        f 4 4 4 4 4 1 4 4 4 4 4 1 4 4 f 
+        f 4 4 4 f 4 1 c c 4 4 4 1 f 4 f 
+        f 4 4 4 4 4 1 4 4 f 4 4 d f 4 f 
+        . f 4 4 4 4 1 c 4 f 4 d f f f f 
+        . . f f 4 d 4 4 f f 4 c f c . . 
+        . . . . f f 4 4 4 4 c d b c . . 
+        . . . . . . f f f f d d d c . . 
+        . . . . . . . . . . c c c . . . 
+        `, SpriteKind.Enemy)
+    initBogey(bogey)
+    bogey.setVelocity(enemySpeed, 0)
+    bogey.left = scene.screenWidth()
+    bogey.y = randint(0, scene.screenHeight())
+    bogey.setFlag(SpriteFlag.AutoDestroy, true)
+}
 function spawnSomething (roll: number) {
     if (roll >= 24 && roll < 40) {
         createCloud()
@@ -84,10 +109,30 @@ function initBogey (bogey: Sprite) {
     true
     )
 }
+function getEnemySpeed () {
+    enemySpeedInit = -100
+    if (game.runtime() < 20000) {
+        enemySpeedInit = -100
+    }
+    if (game.runtime() >= 20000 && game.runtime() < 40000) {
+        enemySpeedInit = -130
+    }
+    if (game.runtime() >= 40000 && game.runtime() < 60000) {
+        enemySpeedInit = -160
+    }
+    if (game.runtime() >= 60000) {
+        enemySpeedInit = -190
+    }
+    return enemySpeedInit
+}
 sprites.onOverlap(SpriteKind.Food, SpriteKind.Player, function (sprite, otherSprite) {
     sprite.destroy()
     if (info.life() < 3) {
         info.changeLifeBy(1)
+        music.powerUp.play()
+    } else {
+        info.changeScoreBy(3)
+        music.baDing.play()
     }
 })
 function createCloud () {
@@ -313,22 +358,26 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.Enemy, function (sprite, otherSp
     info.changeLifeBy(-1)
 })
 controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
-    dart = sprites.createProjectileFromSprite(img`
-        . . . . . . . . 
-        . . . . . . . . 
-        . . . 6 6 6 . . 
-        . . 6 8 8 8 6 . 
-        6 6 9 9 9 9 9 6 
-        . . 6 8 8 8 6 . 
-        . . . 6 6 6 . . 
-        . . . . . . . . 
-        `, spacePlane, 200, 50)
+    if (spacePlane != null) {
+        dart = sprites.createProjectileFromSprite(img`
+            . . . . . . . . 
+            . . . . . . . . 
+            . . . 6 6 6 . . 
+            . . 6 8 8 8 6 . 
+            6 6 9 9 9 9 9 6 
+            . . 6 8 8 8 6 . 
+            . . . 6 6 6 . . 
+            . . . . . . . . 
+            `, spacePlane, 200, 50)
+        music.pewPew.play()
+    }
 })
 let life: Sprite = null
-let bogey: Sprite = null
 let dart: Sprite = null
 let cloud: Sprite = null
 let cloudImages: Image[] = []
+let bogey: Sprite = null
+let enemySpeedInit = 0
 let spacePlane: Sprite = null
 scene.setBackgroundImage(img`
     9999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999991111111111111111
@@ -452,6 +501,7 @@ scene.setBackgroundImage(img`
     9999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999
     9999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999
     `)
+music.playMelody("B A G A G F A C5 ", 480)
 game.waitAnyButton()
 scene.setBackgroundImage(img`
     ................................................................................................................................................................
@@ -576,7 +626,7 @@ scene.setBackgroundImage(img`
     ................................................................................................................................................................
     `)
 scene.setBackgroundColor(9)
-game.splash("A:Shot")
+game.splash("A:Shot", "Strawberry:Heal")
 spacePlane = sprites.create(img`
     . . . . . . . . . . b 5 b . . . 
     . . . . . . . 3 . b 5 b . . . . 
@@ -599,35 +649,35 @@ initSpacePlane(spacePlane)
 spacePlane.setFlag(SpriteFlag.StayInScreen, true)
 info.setLife(3)
 controller.moveSprite(spacePlane, 200, 200)
+enemySpeedInit = -100
+let enemySpeedLow = -130
+let enemySpeedMid = -160
+let enemySpeedHigh = -190
+music.setVolume(50)
 game.onUpdateInterval(750, function () {
     spawnSomething(randint(0, 100))
 })
-game.onUpdateInterval(500, function () {
-    bogey = sprites.create(img`
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . c c c c . . . . 
-        . . . . . . c c d d d d c . . . 
-        . . . . . c c c c c c d c . . . 
-        . . . . c c 4 4 4 4 d c c . . . 
-        . . . c 4 d 4 4 4 4 4 1 c . c c 
-        . . c 4 4 4 1 4 4 4 4 d 1 c 4 c 
-        . c 4 4 4 4 1 4 4 4 4 4 1 c 4 c 
-        f 4 4 4 4 4 1 4 4 4 4 4 1 4 4 f 
-        f 4 4 4 f 4 1 c c 4 4 4 1 f 4 f 
-        f 4 4 4 4 4 1 4 4 f 4 4 d f 4 f 
-        . f 4 4 4 4 1 c 4 f 4 d f f f f 
-        . . f f 4 d 4 4 f f 4 c f c . . 
-        . . . . f f 4 4 4 4 c d b c . . 
-        . . . . . . f f f f d d d c . . 
-        . . . . . . . . . . c c c . . . 
-        `, SpriteKind.Enemy)
-    initBogey(bogey)
-    bogey.setVelocity(-100, 0)
-    bogey.left = scene.screenWidth()
-    bogey.y = randint(0, scene.screenHeight())
-    bogey.setFlag(SpriteFlag.AutoDestroy, true)
+game.onUpdateInterval(263, function () {
+    if (enemySpeedHigh == getEnemySpeed()) {
+        generateEnemy(enemySpeedHigh)
+    }
 })
-game.onUpdateInterval(10000, function () {
+game.onUpdateInterval(312, function () {
+    if (enemySpeedMid == getEnemySpeed()) {
+        generateEnemy(enemySpeedMid)
+    }
+})
+game.onUpdateInterval(500, function () {
+    if (enemySpeedInit == getEnemySpeed()) {
+        generateEnemy(enemySpeedInit)
+    }
+})
+game.onUpdateInterval(385, function () {
+    if (enemySpeedLow == getEnemySpeed()) {
+        generateEnemy(enemySpeedLow)
+    }
+})
+game.onUpdateInterval(20000, function () {
     if (Math.percentChance(70)) {
         life = sprites.create(img`
             . . . . . . . 6 . . . . . . . . 
