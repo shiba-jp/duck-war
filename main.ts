@@ -84,6 +84,12 @@ function initBogey (bogey: Sprite) {
     true
     )
 }
+sprites.onOverlap(SpriteKind.Food, SpriteKind.Player, function (sprite, otherSprite) {
+    sprite.destroy()
+    if (info.life() < 3) {
+        info.changeLifeBy(1)
+    }
+})
 function createCloud () {
     cloudImages = [img`
         ..................1111...............
@@ -126,6 +132,48 @@ function createCloud () {
     cloud.z = -10
     cloud.setFlag(SpriteFlag.Ghost, true)
     cloud.y = randint(0, scene.screenHeight() * 1)
+}
+function initLife (life: Sprite) {
+    animation.runImageAnimation(
+    life,
+    [img`
+        . . . . . . . 6 . . . . . . . . 
+        . . . . . . 8 6 6 . . . 6 8 . . 
+        . . . e e e 8 8 6 6 . 6 7 8 . . 
+        . . e 2 2 2 2 e 8 6 6 7 6 . . . 
+        . e 2 2 4 4 2 7 7 7 7 7 8 6 . . 
+        . e 2 4 4 2 6 7 7 7 6 7 6 8 8 . 
+        e 2 4 5 2 2 6 7 7 6 2 7 7 6 . . 
+        e 2 4 4 2 2 6 7 6 2 2 6 7 7 6 . 
+        e 2 4 2 2 2 6 6 2 2 2 e 7 7 6 . 
+        e 2 4 2 2 4 2 2 2 4 2 2 e 7 6 . 
+        e 2 4 2 2 2 2 2 2 2 2 2 e c 6 . 
+        e 2 2 2 2 2 2 2 4 e 2 e e c . . 
+        e e 2 e 2 2 4 2 2 e e e c . . . 
+        e e e e 2 e 2 2 e e e c . . . . 
+        e e e 2 e e c e c c c . . . . . 
+        . c c c c c c c . . . . . . . . 
+        `,img`
+        . . . . . . . . 6 . . . . . . . 
+        . . 6 8 . . . 6 6 8 . . . . . . 
+        . . 8 7 6 . 6 6 8 8 e e e . . . 
+        . . . 6 7 6 6 8 e 2 2 2 2 e . . 
+        . . 6 8 7 7 7 7 7 2 4 4 2 2 e . 
+        . 8 8 6 7 6 7 7 7 6 2 4 4 2 e . 
+        . . 6 7 7 2 6 7 7 6 2 2 5 4 2 e 
+        . 6 7 7 6 2 2 6 7 6 2 2 4 4 2 e 
+        . 6 7 7 e 2 2 2 6 6 2 2 2 4 2 e 
+        . 6 7 e 2 2 4 2 2 2 4 2 2 4 2 e 
+        . 6 c e 2 2 2 2 2 2 2 2 2 4 2 e 
+        . . c e e 2 e 4 2 2 2 2 2 2 2 e 
+        . . . c e e e 2 2 4 2 2 e 2 e e 
+        . . . . c e e e 2 2 e 2 e e e e 
+        . . . . . c c c e c e e 2 e e e 
+        . . . . . . . . c c c c c c c . 
+        `],
+    500,
+    true
+    )
 }
 function initSpacePlane (spacePlane: Sprite) {
     animation.runImageAnimation(
@@ -276,6 +324,7 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
         . . . . . . . . 
         `, spacePlane, 200, 50)
 })
+let life: Sprite = null
 let bogey: Sprite = null
 let dart: Sprite = null
 let cloud: Sprite = null
@@ -577,4 +626,31 @@ game.onUpdateInterval(500, function () {
     bogey.left = scene.screenWidth()
     bogey.y = randint(0, scene.screenHeight())
     bogey.setFlag(SpriteFlag.AutoDestroy, true)
+})
+game.onUpdateInterval(10000, function () {
+    if (Math.percentChance(70)) {
+        life = sprites.create(img`
+            . . . . . . . 6 . . . . . . . . 
+            . . . . . . 8 6 6 . . . 6 8 . . 
+            . . . e e e 8 8 6 6 . 6 7 8 . . 
+            . . e 2 2 2 2 e 8 6 6 7 6 . . . 
+            . e 2 2 4 4 2 7 7 7 7 7 8 6 . . 
+            . e 2 4 4 2 6 7 7 7 6 7 6 8 8 . 
+            e 2 4 5 2 2 6 7 7 6 2 7 7 6 . . 
+            e 2 4 4 2 2 6 7 6 2 2 6 7 7 6 . 
+            e 2 4 2 2 2 6 6 2 2 2 e 7 7 6 . 
+            e 2 4 2 2 4 2 2 2 4 2 2 e 7 6 . 
+            e 2 4 2 2 2 2 2 2 2 2 2 e c 6 . 
+            e 2 2 2 2 2 2 2 4 e 2 e e c . . 
+            e e 2 e 2 2 4 2 2 e e e c . . . 
+            e e e e 2 e 2 2 e e e c . . . . 
+            e e e 2 e e c e c c c . . . . . 
+            . c c c c c c c . . . . . . . . 
+            `, SpriteKind.Food)
+        initLife(life)
+        life.setVelocity(-50, 0)
+        life.left = scene.screenWidth()
+        life.y = randint(0, scene.screenHeight())
+        life.setFlag(SpriteFlag.AutoDestroy, true)
+    }
 })
