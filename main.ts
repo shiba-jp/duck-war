@@ -134,6 +134,7 @@ sprites.onOverlap(SpriteKind.Food, SpriteKind.Player, function (sprite, otherSpr
         info.changeScoreBy(3)
         music.baDing.play()
     }
+    controller.vibrate(500)
 })
 function createCloud () {
     cloudImages = [img`
@@ -356,6 +357,7 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.Enemy, function (sprite, otherSp
     otherSprite.startEffect(effects.warmRadial, 100)
     otherSprite.destroy()
     info.changeLifeBy(-1)
+    controller.vibrate(500)
 })
 controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
     if (spacePlane != null) {
