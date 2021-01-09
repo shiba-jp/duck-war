@@ -32,13 +32,13 @@ jobs:
           cp ./built/binary.uf2 binary-d51.uf2
       - name: bundle all
         run: |
-          cat binary-*.uf2 > built/arcade.uf2
+          cat binary-*.uf2 > built/duck-war.uf2
       - name: upload bundled
         uses: actions/upload-release-asset@v1.0.1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ github.event.release.upload_url }}
-          asset_path: ./built/arcade.uf2
-          asset_name: arcade.uf2
+          asset_path: ./built/duck-war.uf2
+          asset_name: duck-war.uf2
           asset_content_type: application/octet-stream
