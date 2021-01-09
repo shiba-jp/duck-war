@@ -356,8 +356,10 @@ sprites.onOverlap(SpriteKind.Projectile, SpriteKind.Enemy, function (sprite, oth
 sprites.onOverlap(SpriteKind.Player, SpriteKind.Enemy, function (sprite, otherSprite) {
     otherSprite.startEffect(effects.warmRadial, 100)
     otherSprite.destroy()
+    if (info.life() > 1) {
+        controller.vibrate(20)
+    }
     info.changeLifeBy(-1)
-    controller.vibrate(20)
 })
 controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
     if (spacePlane != null) {
